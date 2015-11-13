@@ -15,6 +15,7 @@ dependencies {
     compile "org.jboss.weld.se:weld-se-core:2.3.1.Final"
 
     compile "org.jboss.resteasy:resteasy-jaxrs:3.0.13.Final"
+    compile "org.jboss.resteasy:resteasy-cdi:3.0.13.Final"
     compile "org.jboss.resteasy:resteasy-jackson-provider:3.0.13.Final"
     compile "org.jboss.resteasy:resteasy-undertow:3.0.13.Final"
     compile "javax.ws.rs:javax.ws.rs-api:2.0.1"

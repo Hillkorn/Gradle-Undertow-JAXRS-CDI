@@ -1,6 +1,8 @@
 package de.hillkorn.rest;
 
 import de.hillkorn.dto.Simple;
+import de.hillkorn.service.TestService;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,10 +14,13 @@ import javax.ws.rs.core.Response;
 @Path("/hello")
 public class Hello {
 
+    @Inject
+    TestService testService;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Simple get() {
-        return new Simple("TEXT");
+        return testService.getTest();
     }
 
     @GET
