@@ -1,56 +1,72 @@
 package de.hillkorn;
 
-import de.hillkorn.rest.Hello;
 import io.undertow.Undertow;
+import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
-import java.util.HashSet;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletException;
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
-import org.apache.deltaspike.cdise.api.CdiContainer;
-import org.apache.deltaspike.cdise.api.CdiContainerLoader;
-import org.apache.deltaspike.cdise.api.ContextControl;
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
+import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
+import org.jboss.weld.environment.servlet.Listener;
+import org.reflections.Reflections;
 
 @ApplicationPath("/base")
 @ApplicationScoped
 public class MyApplication extends Application {
 
+    private static final int PORT = 8080;
+
     public static void main(String[] args) throws ServletException {
-        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
-        cdiContainer.boot();
+        //HTTP Server
+        UndertowJaxrsServer server = new UndertowJaxrsServer();
+        Undertow.Builder serverBuilder = Undertow.builder().addHttpListener(PORT, "0.0.0.0");
+        server.start(serverBuilder);
+//        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+//        cdiContainer.boot();
 //
-        ContextControl contextControl = cdiContainer.getContextControl();
-        contextControl.startContexts();
+//        ContextControl contextControl = cdiContainer.getContextControl();
+//        contextControl.startContexts();
 //        contextControl.startContext(ApplicationScoped.class);
 
         ResteasyDeployment deployment = new ResteasyDeployment();
         deployment.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
         deployment.setApplicationClass(MyApplication.class.getName());
 
-        UndertowJaxrsServer server = new UndertowJaxrsServer();
-        Undertow.Builder serverBuilder = Undertow.builder().addHttpListener(8080, "0.0.0.0");
-//        serverBuilder.
-        server.start(serverBuilder);
+        DeploymentInfo undertowDeployment = server.undertowDeployment(deployment);
 
-        DeploymentInfo deploymentInfo = server.undertowDeployment(deployment)
-            .setClassLoader(MyApplication.class.getClassLoader())
-            .setContextPath("/base")
-            .setDeploymentName("Tryout");
-//        server.deploy(MyApplication.class);
-        server.deploy(deploymentInfo);
-//        cdiContainer.shutdown();
+        undertowDeployment.setClassLoader(MyApplication.class.getClassLoader())
+            .setContextPath("/")
+            .setDeploymentName("Tryout")
+            .addListener(Servlets.listener(Listener.class))
+            .addListener(Servlets.listener(ResteasyBootstrap.class));
+        server.deploy(undertowDeployment);
+    }
+    private final Set<Class<?>> classes;
+
+    public MyApplication() {
+        System.out.println("Scan for Paths");
+        Reflections reflections = new Reflections("de.hillkorn.rest");
+        classes = reflections.getTypesAnnotatedWith(Path.class);
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(Hello.class);
+//        classes.add(TestService.class);
         return classes;
+//        return null;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+//        Set<Object> resources = new LinkedHashSet<Object>();
+//        return resources;
+        return null;
     }
 
 //    ServletInfo servletInfo = Servlets.servlet("YourServletName", YourServlet.class).setAsyncSupported(true)

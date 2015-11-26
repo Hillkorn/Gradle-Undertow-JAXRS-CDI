@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 public class Hello {
 
     @Inject
-    TestService testService;
+    public TestService testService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
