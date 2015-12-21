@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response;
 
 @ManagedBean
 @Path("/hello")
-public class Hello {
+public class HelloResource {
 
   @Inject
   TestService testService;
 
-  public Hello() {
+  public HelloResource() {
     System.out.println("Create Controller");
   }
 

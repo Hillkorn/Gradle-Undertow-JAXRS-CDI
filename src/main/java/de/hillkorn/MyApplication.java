@@ -1,14 +1,18 @@
 package de.hillkorn;
 
+import de.hillkorn.provider.MongoDBProvider;
 import io.undertow.Undertow;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
+import io.undertow.servlet.api.ServletInfo;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletException;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
+import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.reflections.Reflections;
@@ -38,10 +42,13 @@ public class MyApplication extends Application {
 
       DeploymentInfo undertowDeployment = server.undertowDeployment(deployment, "/");
 
+        ServletInfo servletInfo = Servlets.servlet("http-async", HttpServlet30Dispatcher.class);//.setAsyncSupported(true)
+        servletInfo.addMapping("/serv");
+        servletInfo.setAsyncSupported(true);
         undertowDeployment.setClassLoader(MyApplication.class.getClassLoader())
             .setContextPath("/")
-              .setDeploymentName("Tryout")
-              .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+            .setDeploymentName("Tryout")
+            .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 //              .addListener(Servlets.listener(Listener.class));
  //            .addListener(Servlets.listener(ResteasyBootstrap.class));
         server.deploy(undertowDeployment);
@@ -65,9 +72,10 @@ public class MyApplication extends Application {
 
     @Override
     public Set<Object> getSingletons() {
-//      Set<Object> resources = new LinkedHashSet<Object>();
-//      return resources;
-      return null;
+        Set<Object> resources = new LinkedHashSet<Object>();
+        resources.add(new MongoDBProvider());
+        return resources;
+//      return null;
     }
 
 //    ServletInfo servletInfo = Servlets.servlet("YourServletName", YourServlet.class).setAsyncSupported(true)
