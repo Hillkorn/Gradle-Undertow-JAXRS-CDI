@@ -3,7 +3,9 @@
             "http://google-web-toolkit.googlecode.com/svn/tags/2.8.0/distro-source/core/src/gwt-module.dtd">
 
 <module rename-to="app">
-    <inherits name="org.jboss.errai.enterprise.All" />
+    <!--<inherits name="org.jboss.errai.enterprise.All" />-->
+    <inherits name="org.jboss.errai.ioc.Container"/>
+    <inherits name="org.jboss.errai.enterprise.CDI"/>
 
     <replace-with class="org.jboss.errai.demo.client.local.Config">
         <when-type-is class="org.jboss.errai.bus.client.framework.Configuration" />
