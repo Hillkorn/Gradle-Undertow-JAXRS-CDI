@@ -35,16 +35,17 @@ dependencies {
 //    compile 'asm:asm:3.3.1'
     compile 'com.google.gwt:gwt-user:2.7.0'
     compile 'org.jboss.errai:errai-common:3.2.1.Final'
-    compile 'org.jboss.errai:errai-ui:3.2.1.Final'
     compile 'org.jboss.errai:errai-ioc:3.2.1.Final'
     compile 'org.jboss.errai:errai-cdi-client:3.2.1.Final'
-    compile ('org.jboss.errai:errai-jaxrs-client:3.2.1.Final') {
-        transitive = false
-    }
-    compile 'org.jboss.errai:errai-javax-enterprise:3.2.1.Final'
-    compile 'org.jboss.errai:errai-marshalling:3.2.1.Final'
+    compile 'org.jboss.errai:errai-ui:3.2.1.Final'
+    compile 'org.jboss.errai:errai-data-binding:3.2.1.Final'
     compile 'org.jboss.errai:errai-navigation:3.2.1.Final'
+    compile 'org.jboss.errai:errai-marshalling:3.2.1.Final'
     compile 'org.jboss.errai:errai-tools:3.2.1.Final'
+//    compile ('org.jboss.errai:errai-jaxrs-client:3.2.1.Final') {
+//        transitive = false
+//    }
+//    compile 'org.jboss.errai:errai-javax-enterprise:3.2.1.Final'
 }
 
 compileJava{
