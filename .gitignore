@@ -9,3 +9,5 @@ gradle-app.setting
 !gradle-wrapper.jar
 /.nb-gradle/
 /errai/.nb-gradle/
+.errai
+/errai/war
