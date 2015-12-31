@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'gwt'
+apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
@@ -54,19 +55,17 @@ compileJava{
 
 gwt {
     gwtVersion='2.7.0'
-    modules 'de.hillkorn.errai.App'
+    modules 'de.hillkorn.App'
+    devModules 'de.hillkorn.AppDev'
     
-    sourceSets {
-        main {
-            java {
-                srcDir 'src'
-            }
-        }
-    }
+    logLevel = 'INFO'
      
-    logLevel = 'ERROR'
-     
-    minHeapSize = "512M";
-    maxHeapSize = "1024M";
+    minHeapSize = "1024M";
+    maxHeapSize = "2048M";
+}
 
+task jettyDraftWar(type: JettyRunWar) {
+	dependsOn draftWar
+	dependsOn.remove('war')
+	webApp=draftWar.archivePath
 }

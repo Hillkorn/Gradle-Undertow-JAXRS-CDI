@@ -11,6 +11,8 @@
         <when-type-is class="org.jboss.errai.bus.client.framework.Configuration" />
     </replace-with>
 
+    <source path="errai"/>
+
     <set-property name="gwt.logging.enabled" value="TRUE"/>
     <!-- Uncomment the line below to enable all logging statements (default
     level is "INFO"). -->
