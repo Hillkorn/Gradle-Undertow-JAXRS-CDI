@@ -1,20 +1,18 @@
 package de.hillkorn;
 
-import de.hillkorn.provider.MongoDBProvider;
 import io.undertow.Undertow;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
-import io.undertow.servlet.api.ServletInfo;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
-import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
+import org.jboss.weld.util.collections.ArraySet;
 import org.reflections.Reflections;
 
 @ApplicationPath("/base")
@@ -37,44 +35,45 @@ public class MyApplication extends Application {
 
         ResteasyDeployment deployment = new ResteasyDeployment();
 //        deployment.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
-      deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");
+        deployment.setInjectorFactoryClass("org.jboss.resteasy.cdi.CdiInjectorFactory");
         deployment.setApplicationClass(MyApplication.class.getName());
 
-      DeploymentInfo undertowDeployment = server.undertowDeployment(deployment, "/");
+        DeploymentInfo undertowDeployment = server.undertowDeployment(deployment, "/");
 
-        ServletInfo servletInfo = Servlets.servlet("http-async", HttpServlet30Dispatcher.class);//.setAsyncSupported(true)
-        servletInfo.addMapping("/serv");
-        servletInfo.setAsyncSupported(true);
+//        ServletInfo servletInfo = Servlets.servlet("http-async", HttpServlet30Dispatcher.class);//.setAsyncSupported(true)
+//        servletInfo.setAsyncSupported(true);
         undertowDeployment.setClassLoader(MyApplication.class.getClassLoader())
             .setContextPath("/")
             .setDeploymentName("Tryout")
             .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 //              .addListener(Servlets.listener(Listener.class));
- //            .addListener(Servlets.listener(ResteasyBootstrap.class));
+        //            .addListener(Servlets.listener(ResteasyBootstrap.class));
         server.deploy(undertowDeployment);
-  }
+    }
 
     private final Set<Class<?>> classes;
+    private final Set<Object> singletons;
 
-    public MyApplication() {
+    public MyApplication() throws InstantiationException, IllegalAccessException {
         System.out.println("Scan for Paths");
         Reflections reflections = new Reflections("de.hillkorn.rest");
-    classes = reflections.getTypesAnnotatedWith(Path.class);
-//      classes.add(TestService.class);
-  }
+        classes = reflections.getTypesAnnotatedWith(Path.class);
+        singletons = new ArraySet<>();
+        Set<Class<?>> singletonClasses = reflections.getTypesAnnotatedWith(Singleton.class);
+        for (Class<? extends Object> singletonClass : singletonClasses) {
+            singletons.add(singletonClass.newInstance());
+        }
+    }
 
     @Override
     public Set<Class<?>> getClasses() {
-//        classes.add(TestService.class);
         return classes;
 //        return null;
     }
 
     @Override
     public Set<Object> getSingletons() {
-        Set<Object> resources = new LinkedHashSet<Object>();
-        resources.add(new MongoDBProvider());
-        return resources;
+        return singletons;
 //      return null;
     }
 

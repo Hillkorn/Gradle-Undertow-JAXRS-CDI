@@ -2,35 +2,50 @@ apply plugin: 'java'
 apply plugin: 'war'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 sourceSets {
-  main {
-    output.resourcesDir = 'build/classes/main'
-    output.classesDir   = 'build/classes/main'
-  }
+    main {
+        output.resourcesDir = 'build/classes/main'
+        output.classesDir   = 'build/classes/main'
+    }
+    frontend {
+    }
 }
 
 dependencies {
-  compile 'org.reflections:reflections:0.9.10'
-  compile 'org.mongodb:mongodb-driver-async:3.2.0'
-  compile 'org.mongodb:mongodb-driver-rx:1.2.0'
+    compile 'org.reflections:reflections:0.9.10'
+    compile 'org.mongodb:mongodb-driver-async:3.2.0'
+    compile 'org.mongodb:mongodb-driver-rx:1.2.0'
 
-  compile 'org.jboss.weld.servlet:weld-servlet:3.0.0.Alpha1'
+    compile 'org.jboss.weld.servlet:weld-servlet:3.0.0.Alpha1'
 
-  compile "org.jboss.resteasy:resteasy-jaxrs:3.0.13.Final"
-  compile "org.jboss.resteasy:resteasy-cdi:3.0.9.Final"
-  compile "org.jboss.resteasy:resteasy-jackson-provider:3.0.13.Final"
-  compile "org.jboss.resteasy:resteasy-undertow:3.0.9.Final"
+    compile "org.jboss.resteasy:resteasy-jaxrs:3.0.13.Final"
+    compile "org.jboss.resteasy:resteasy-cdi:3.0.9.Final"
+    compile "org.jboss.resteasy:resteasy-jackson-provider:3.0.13.Final"
+    compile "org.jboss.resteasy:resteasy-undertow:3.0.9.Final"
 
-  compile "javax:javaee-api:7.0"
+    compile "javax:javaee-api:7.0"
 
-  compile "io.undertow:undertow-core:1.1.0.Final"
-  compile "io.undertow:undertow-servlet:1.1.0.Final"
+    compile "io.undertow:undertow-core:1.1.0.Final"
+    compile "io.undertow:undertow-servlet:1.1.0.Final"
+
+    frontendCompile 'org.jboss.errai:errai-common:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-ui:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-ioc:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-cdi-client:3.2.1.Final'
+    frontendCompile ('org.jboss.errai:errai-jaxrs-client:3.2.1.Final') {
+        transitive = false
+    }
+    frontendCompile 'org.jboss.errai:errai-javax-enterprise:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-marshalling:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-navigation:3.2.1.Final'
+    frontendCompile 'org.jboss.errai:errai-tools:3.2.1.Final'
+    frontendCompile 'com.google.gwt:gwt-user:2.7.0'
 }
 
 task run(type: JavaExec) {
-  main "de.hillkorn.MyApplication"
-  classpath sourceSets.main.runtimeClasspath
+    main "de.hillkorn.MyApplication"
+    classpath sourceSets.main.runtimeClasspath
 }
