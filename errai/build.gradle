@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'gwt'
-apply plugin: 'jetty'
+//apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
@@ -24,6 +24,7 @@ sourceSets {
 
 configurations {
     all*.exclude group: 'asm'
+    all*.exclude module: 'jboss-logging'
 }
 
 dependencies {
@@ -42,9 +43,10 @@ dependencies {
     compile 'org.jboss.errai:errai-navigation:3.2.1.Final'
     compile 'org.jboss.errai:errai-marshalling:3.2.1.Final'
     compile 'org.jboss.errai:errai-tools:3.2.1.Final'
-//    compile ('org.jboss.errai:errai-jaxrs-client:3.2.1.Final') {
-//        transitive = false
-//    }
+    compile 'org.jboss.errai:errai-jaxrs-provider:3.2.1.Final'
+    compile ('org.jboss.errai:errai-jaxrs-client:3.2.1.Final') {
+        transitive = false
+    }
 //    compile 'org.jboss.errai:errai-javax-enterprise:3.2.1.Final'
 }
 
@@ -58,11 +60,15 @@ gwt {
     gwtVersion='2.7.0'
     modules 'de.hillkorn.App'
     devModules 'de.hillkorn.AppDev'
-    
+
     logLevel = 'INFO'
-     
+
     minHeapSize = "1024M";
     maxHeapSize = "2048M";
+
+    superDev {
+		noPrecompile=false
+	}
 }
 
 task jettyDraftWar(type: JettyRunWar) {
