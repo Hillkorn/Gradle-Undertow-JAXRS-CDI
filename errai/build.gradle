@@ -50,11 +50,10 @@ dependencies {
 //    compile 'org.jboss.errai:errai-javax-enterprise:3.2.1.Final'
 }
 
-compileJava{
+compileJava {
     //enable incremental compilation
     options.incremental = true
 }
-
 
 gwt {
     gwtVersion='2.7.0'

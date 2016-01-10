@@ -1,6 +1,6 @@
 package de.hillkorn.service;
 
-import de.hillkorn.dto.Simple;
+import de.hillkorn.api.dto.Simple;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 

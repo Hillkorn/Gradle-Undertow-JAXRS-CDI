@@ -1,6 +1,6 @@
 package de.hillkorn.rest;
 
-import de.hillkorn.dto.Simple;
+import de.hillkorn.api.dto.Simple;
 import de.hillkorn.service.TestService;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;

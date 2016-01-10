@@ -1,4 +1,4 @@
-package de.hillkorn.dto;
+package de.hillkorn.api.dto;
 
 public class Simple {
 
